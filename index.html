@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Input Data Sales IB (AW)</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <div class="neumorphic container">
+    <h3>Form Input Sales IB</h3>
+
+    <form id="salesForm" autocomplete="off">
+      <div class="field">
+        <label for="tanggal"></label>
+        <input type="date" id="tanggal" required />
+        <div class="hint"></div>
+      </div>
+
+      <div class="field">
+        <label for="sales"></label>
+        <input type="text" id="sales" inputmode="numeric" placeholder="Masukan Sales" required />
+        <div class="hint"></div>
+      </div>
+
+      <button id="btnSubmit" type="submit">Simpan</button>
+    </form>
+
+    <div class="status" id="status"></div>
+  </div>
+
+  <!-- Toast Notifikasi -->
+  <div id="toast" class="toast">Data berhasil disimpan! Mantapp</div>
+
+<footer class="neumorphic-footer">
+  <p>&copy; 2025 Fauzi | Designed with ❤️</p>
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
