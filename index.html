@@ -1,0 +1,285 @@
+<!DOCTYPE html>  
+<html lang="id">  
+<head>  
+  <meta charset="UTF-8" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>  
+  <title>Input Data Sales IB (AW)</title>  
+  <style>  
+    * {  
+      margin: 0;  
+      padding: 0;  
+      box-sizing: border-box;  
+    }  
+  
+    body {  
+      margin: 0;  
+      min-height: 100vh;  
+      display: flex;  
+      align-items: center;  
+      justify-content: center;  
+      background-color: #e0e5ec;  
+      font-family: Arial, sans-serif;  
+    }  
+    .container {  
+      display: flex;  
+      flex-direction: column;  
+      justify-content: center;  
+      align-items: center;  
+      padding: 30px;  
+      width: 300px;  
+      text-align: center;  
+      animation: float 6s ease-in-out infinite;  
+    }  
+  
+    .neumorphic {  
+      background: #e0e5ec;  
+      border-radius: 20px;  
+      box-shadow: 10px 10px 20px #a3b1c6, -10px -10px 20px #ffffff;  
+    }  
+  
+    h3 {  
+      color: #6d7582;  
+      margin-bottom: 20px;  
+    }  
+    input {  
+      padding: 15px;  
+      width: 80%;  
+      font-size: 16px;  
+      color: #6d7582;  
+      border: none;  
+      outline: none;  
+      margin-bottom: 25px;  
+      background: #e0e5ec;  
+      border-radius: 20px;  
+      box-shadow: 10px 10px 20px #a3b1c6, -10px -10px 20px #ffffff;  
+    }  
+    button {  
+      padding: 15px 30px;  
+      font-size: 16px;  
+      color: #6d7582;  
+      border: none;  
+      cursor: pointer;  
+      border-radius: 20px;  
+      box-shadow: 10px 10px 20px #a3b1c6, -10px -10px 20px #ffffff;  
+      transition: all o.3s ease;  
+    }  
+    button:active {  
+      box-shadow: inset 5px 5px 10px #a3b1c6, inset -5px -5px 10px #ffffff;  
+    }  
+    .hint { font-size: 12px; color: #666; margin-top: 6px; }  
+  
+    /* Animasi uang jatuh */  
+    .money {  
+      position: fixed;  
+      top: -50px;  
+      font-size: 24px;  
+      animation: fall linear forwards;  
+      pointer-events: none;  
+    }  
+    @keyframes fall {  
+      to { transform: translateY(110vh) rotate(360deg); opacity: 0; }  
+    }  
+  
+    /* Toast Notifikasi */  
+    .toast {  
+      position: fixed;  
+      bottom: 20px;  
+      background: transparent;  
+      color: #6d7582;  
+      padding: 12px 18px;  
+      border-radius: 10px;  
+      border: none;  
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);  
+      opacity: 0;  
+      transform: translateY(30px);  
+      transition: opacity .45s ease, transform .45s ease, background .2s ease;  
+      z-index: 9999;  
+      font-weight: 600;  
+    }  
+    .toast.show { opacity: 1; transform: translateY(0); }  
+    .toast.error { background: #ffffff; }  
+    .toast.warn { background: #ffc107; color: #222; }  
+  
+    .status { margin-top: 10px; font-size: 14px; color: #333; min-height: 20px; }  
+  
+    .neumorphic-footer {  
+      text-align: center;  
+      padding: 5px;  
+      background: #a3b1c6;  
+      border-radius: 20px 20px 0 0;  
+      box-shadow: -8px -8px 16px #ffffff,  
+                  8px 8px 16px #7a8aa0;  
+      color: #333;  
+      position: fixed;  
+      bottom: 0;  
+      width: 100%;  
+    }  
+  </style>  
+</head>  
+<body>  
+
+  <!-- Form Login -->
+  <div id="loginContainer" class="neumorphic container">  
+    <h3>Login Dulu Bang...☕</h3>  
+    <form id="loginForm" autocomplete="off">  
+      <input type="text" id="username" placeholder="Username" required />  
+      <input type="password" id="password" placeholder="Password" required />  
+      <button type="submit">Masuk</button>  
+    </form>  
+  </div>  
+
+  <!-- Form Sales -->
+  <div id="salesContainer" class="neumorphic container" style="display:none;">  
+    <h3>Form Input Sales IB</h3>  
+  
+    <form id="salesForm" autocomplete="off">  
+      <div class="field">  
+        <input type="date" id="tanggal" required />  
+      </div>  
+  
+      <div class="field">  
+        <input type="text" id="sales" inputmode="numeric" placeholder="Masukan Sales" required />  
+      </div>  
+  
+      <button id="btnSubmit" type="submit">Simpan</button>  
+    </form>  
+  
+    <div class="status" id="status"></div>  
+  </div>  
+  
+  <!-- Toast Notifikasi -->  
+  <div id="toast" class="toast">Data berhasil disimpan! Mantapp</div>  
+  
+  <footer class="neumorphic-footer">  
+    <p>&copy; 2025 Fauzi | Designed with ❤️</p>  
+  </footer>  
+  
+<script>  
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyFWda891ZdRAlytI_ngKxbilIjw3SA-2eXRyC-_4nTasMopHDzG3ipli_BkOvHYj0p/exec";  
+  
+  const form = document.getElementById("salesForm");  
+  const salesInput = document.getElementById("sales");  
+  const tanggalInput = document.getElementById("tanggal");  
+  const statusEl = document.getElementById("status");  
+  const toast = document.getElementById("toast");  
+  const btn = document.getElementById("btnSubmit");  
+  const loginForm = document.getElementById("loginForm");  
+  const loginContainer = document.getElementById("loginContainer");  
+  const salesContainer = document.getElementById("salesContainer");  
+  
+  // LOGIN sederhana
+  const USERNAME = "ib";  
+  const PASSWORD = "123";  
+  
+  loginForm.addEventListener("submit", function(e){  
+    e.preventDefault();  
+    const u = document.getElementById("username");  
+    const p = document.getElementById("password");  
+  
+    if(u.value === USERNAME && p.value === PASSWORD){  
+      loginContainer.style.display = "none";  
+      salesContainer.style.display = "flex";  
+    } else {  
+      showToast("❌ Username atau password salah.", "error");  
+      u.value = "";  
+      p.value = "";  
+      u.focus();  
+    }  
+  });  
+  
+  // Set default tanggal = hari ini  
+  (function setToday() {  
+    const now = new Date();  
+    const yyyy = now.getFullYear();  
+    const mm = String(now.getMonth() + 1).padStart(2, "0");  
+    const dd = String(now.getDate()).padStart(2, "0");  
+    tanggalInput.value = `${yyyy}-${mm}-${dd}`;  
+  })();  
+  
+  // Format input sales ke Rupiah on-the-fly  
+  salesInput.addEventListener("input", function () {  
+    const digits = this.value.replace(/[^\d]/g, "");  
+    this.value = digits ? formatRupiah(digits, "Rp ") : "";  
+  });  
+  
+  function formatRupiah(angka, prefix = "Rp ") {  
+    const s = angka.replace(/[^,\d]/g, "");  
+    const split = s.split(",");  
+    const sisa = split[0].length % 3;  
+    let rupiah = split[0].substr(0, sisa);  
+    const ribuan = split[0].substr(sisa).match(/\d{3}/gi);  
+    if (ribuan) {  
+      const separator = sisa ? "." : "";  
+      rupiah += separator + ribuan.join(".");  
+    }  
+    rupiah = split[1] !== undefined ? rupiah + "," + split[1] : rupiah;  
+    return prefix + rupiah;  
+  }  
+  
+  form.addEventListener("submit", async function (e) {  
+    e.preventDefault();  
+    statusEl.textContent = "";  
+  
+    const [y, m, d] = tanggalInput.value.split("-");  
+    const now = new Date();  
+    const HH = String(now.getHours()).padStart(2, "0");  
+    const MM = String(now.getMinutes()).padStart(2, "0");  
+    const SS = String(now.getSeconds()).padStart(2, "0");  
+    const tanggalLengkap = `${y}/${m}/${d} ${HH}:${MM}:${SS}`;  
+  
+    const salesClean = salesInput.value.replace(/[^\d]/g, "");  
+    const sales = parseFloat(salesClean || "0");  
+    if (!sales || !tanggalInput.value) {  
+      showToast("⚠️ Lengkapi tanggal & sales.", "warn");  
+      return;  
+    }  
+  
+    btn.disabled = true;  
+    btn.textContent = "Menyimpan Data...";  
+  
+    try {  
+      const res = await fetch(WEB_APP_URL + "?t=" + Date.now(), {  
+        method: "POST",  
+        body: JSON.stringify({ tanggal: tanggalLengkap, sales: sales })  
+      });  
+      const result = await res.json();  
+  
+      if (result.result === "success") {  
+        statusEl.textContent = "Data berhasil disimpan.";  
+        showToast("Data berhasil disimpan!");  
+        animasiUang();  
+        form.reset();  
+        setToday();  
+      } else {  
+        statusEl.textContent = "❌ Gagal menyimpan data.";  
+        showToast("❌ Gagal menyimpan data.", "error");  
+      }  
+    } finally {  
+      btn.disabled = false;  
+      btn.textContent = "Simpan";  
+    }  
+  });  
+  
+  function animasiUang() {  
+    for (let i = 0; i < 24; i++) {  
+      const money = document.createElement("div");  
+      money.classList.add("money");  
+      money.textContent = Math.random() < 0.5 ? "💵" : "🪙";  
+      money.style.left = Math.random() * window.innerWidth + "px";  
+      money.style.animationDuration = (Math.random() * 2.5 + 2.2) + "s";  
+      document.body.appendChild(money);  
+      setTimeout(() => money.remove(), 5000);  
+    }  
+  }  
+  
+  function showToast(message, type = "success") {  
+    toast.className = "toast";  
+    if (type === "error") toast.classList.add("error");  
+    if (type === "warn") toast.classList.add("warn");  
+    toast.textContent = message;  
+    requestAnimationFrame(() => toast.classList.add("show"));  
+    setTimeout(() => toast.classList.remove("show"), 3000);  
+  }  
+</script>  
+</body>  
+</html>
