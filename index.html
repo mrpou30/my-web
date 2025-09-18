@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Input Sales Harian</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+      width: 350px;
+      text-align: center;
+    }
+    h2 { margin-bottom: 20px; }
+    input, button {
+      width: 90%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+    input {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+    input::placeholder { color: #ddd; }
+    button {
+      background: #00c6ff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #0072ff;
+      transform: scale(1.05);
+    }
+    .message { margin-top: 15px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Input Sales Harian</h2>
+    <input type="date" id="tanggal" required>
+    <input type="number" id="sales" placeholder="Jumlah Sales (Rp)" required>
+    <button onclick="kirimData()">Simpan</button>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    // Ganti dengan URL Web App kamu
+    const scriptURL = "https://script.google.com/macros/s/AKfycbzBp-6_-QFh351b232U--wd8bHgynF5wEi2q9gSEz1va6QU5TUH0-fznqGQ_SW2T8eh/exec";
+
+    async function kirimData() {
+      let tanggal = document.getElementById("tanggal").value;
+      let sales = document.getElementById("sales").value;
+      let msg = document.getElementById("message");
+
+      if (!tanggal || !sales) {
+        msg.innerHTML = "⚠️ Di isi dulu oy salesnya.";
+        msg.style.color = "yellow";
+        return;
+      }
+
+      try {
+        let res = await fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify({ tanggal, sales })
+        });
+        if (res.ok) {
+          msg.innerHTML = "✅ Data berhasil disimpan! (jangan lupa ngopi)";
+          msg.style.color = "lightgreen";
+          document.getElementById("sales").value = "";
+        } else {
+          msg.innerHTML = "❌ Gagal menyimpan data!";
+          msg.style.color = "red";
+        }
+      } catch (err) {
+        msg.innerHTML = "❌ Error: " + err;
+        msg.style.color = "red";
+      }
+    }
+  </script>
+</body>
+</html>
